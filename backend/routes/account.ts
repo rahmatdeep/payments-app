@@ -1,15 +1,18 @@
-const express = require("express");
-const { authMiddleware } = require("../middleware");
-const { User, Account } = require("../db");
-const { default: mongoose } = require("mongoose");
+
+import express from "express"
+import  authMiddleware from "../middleware";
+import { User, Account } from "../db";
+import  mongoose from "mongoose";
 
 const router = express.Router();
 
 router.get("/balance", authMiddleware, async (req, res) => {
   const account = await Account.findOne({
-    userId: req.userId,
+    userId: req.headers["userId"],
   });
-
+  if(!account){
+    return res.status(403).json({message: "Account not Found"})
+  }
   res.json({
     balance: account.balance,
   });
@@ -21,7 +24,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
   session.startTransaction();
   const { amount, to } = req.body;
 
-  const account = await Account.findOne({ userId: req.userId }).session(
+  const account = await Account.findOne({ userId: req.headers["userId"] }).session(
     session
   );
 
@@ -42,7 +45,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
   }
 
   await Account.updateOne(
-    { userId: req.userId },
+    { userId: req.headers["userId"] },
     { $inc: { balance: -amount } }
   ).session(session);
   await Account.updateOne(
@@ -56,4 +59,4 @@ router.post("/transfer", authMiddleware, async (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

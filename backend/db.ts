@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const dbURL = "mongodb+srv://admin:root@cluster0.m63nmlj.mongodb.net/paytm";
 
@@ -45,10 +45,7 @@ const AccountSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model("User", UserSchema);
-const Account = mongoose.model("Account", AccountSchema);
+export const User = mongoose.model("User", UserSchema);
+export const Account = mongoose.model("Account", AccountSchema);
 
-module.exports = {
-  User,
-  Account,
-};
+

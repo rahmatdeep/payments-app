@@ -1,9 +1,13 @@
-const express = require("express");
-const zod = require("zod");
-const jwt = require("jsonwebtoken");
-const JWT_SECRET = require("../config");
-const { User, Account } = require("../db");
-const { authMiddleware } = require("../middleware");
+import express from "express";
+import zod from "zod";
+import jwt from "jsonwebtoken";
+
+import JWT_SECRET from "../config";
+import { User, Account } from "../db";
+import authMiddleware from "../middleware";
+
+
+
 const router = express.Router();
 
 //SIGN UP
@@ -122,7 +126,7 @@ router.put("/", authMiddleware, async (req, res) => {
     });
   }
 
-  await User.updateOne({ _id: req.userId }, { $set: req.body });
+  await User.updateOne({ _id: req.headers["userId"] }, { $set: req.body });
 
   res.json({
     message: "Updated successfully",
@@ -165,4 +169,4 @@ router.get("/bulk", authMiddleware, async (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;
