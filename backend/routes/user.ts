@@ -40,8 +40,8 @@ router.post("/signup", async (req, res) => {
   const user = await User.create({
     username: req.body.username,
     password: req.body.password,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
+    firstName: req.body.firstName.toLowerCase(),
+    lastName: req.body.lastName.toLowerCase(),
   });
 
   const userId = user._id;
@@ -138,11 +138,11 @@ router.put("/", authMiddleware, async (req, res) => {
 router.get("/bulk", authMiddleware, async (req, res) => {
   const filter = req.query.filter || "";
 
-  if (filter === "") {
-    return res.json({
-      message: "Filter Empty",
-    });
-  }
+  // if (filter === "") {
+  //   return res.json({
+  //     message: "Filter Empty",
+  //   });
+  // }
 
   const users = await User.find({
     $or: [
