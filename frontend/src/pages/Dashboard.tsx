@@ -6,7 +6,7 @@ import axios from "axios";
 
 export function Dashboard() {
   const [balance, setBalance] = useState(0)
-  const [name, setName] = useState("")
+  const [name, setName] = useState("name")
 
   useEffect( ()=>{
     async function getInfo() {
