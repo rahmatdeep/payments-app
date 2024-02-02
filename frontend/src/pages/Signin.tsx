@@ -47,7 +47,7 @@ export function Signin() {
                 localStorage.setItem("token", response.data.token);
                 navigate("/dashboard");
               }}
-              label={"Sing in"}
+              label={"Sign in"}
             />
           </div>
           <BottomWarning
