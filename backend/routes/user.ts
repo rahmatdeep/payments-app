@@ -12,7 +12,7 @@ const router = express.Router();
 
 const signupSchema = zod.object({
   username: zod.string().email(),
-  password: zod.string(),
+  password: zod.string().min(6),
   firstName: zod.string(),
   lastName: zod.string(),
 });
@@ -25,41 +25,50 @@ router.post("/signup", async (req, res) => {
     });
   }
 
-  const exsistingUser = await User.findOne({
-    username: req.body.username,
-  });
-
-  if (exsistingUser) {
-    return res.status(411).json({
-      message: "Email already taken / Incorrect inputs",
+  try {
+    const exsistingUser = await User.findOne({
+      username: req.body.username,
     });
+    if (exsistingUser) {
+      return res.status(411).json({
+        message: "Email already taken / Incorrect inputs",
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ msg: "User not found" });
   }
 
-  const user = await User.create({
-    username: req.body.username,
-    password: req.body.password,
-    firstName: req.body.firstName.toLowerCase(),
-    lastName: req.body.lastName.toLowerCase(),
-  });
+  try {
+    const user = await User.create({
+      username: req.body.username,
+      password: req.body.password,
+      firstName: req.body.firstName.toLowerCase(),
+      lastName: req.body.lastName.toLowerCase(),
+    });
 
-  const userId = user._id;
+    const userId = user._id;
 
-  await Account.create({
-    userId,
-    balance: Math.floor(Math.random() * 10000) + 1,
-  });
-
-  const token = jwt.sign(
-    {
+    await Account.create({
       userId,
-    },
-    JWT_SECRET
-  );
+      balance: Math.floor(Math.random() * 10000) + 1,
+    });
 
-  res.json({
-    message: "User created successfully",
-    token: token,
-  });
+    const token = jwt.sign(
+      {
+        userId,
+      },
+      JWT_SECRET
+    );
+
+    res.json({
+      msg: "User created successfully",
+      token: token,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ msg: "Error in user creation" });
+  }
 });
 
 //SIGNIN

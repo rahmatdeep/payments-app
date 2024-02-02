@@ -8,7 +8,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(403).json({
-      message: "Access denied",
+      msg: "token absent",
     });
   }
 
@@ -18,19 +18,20 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     jwt.verify(token, JWT_SECRET, (err, payload)=>{
       "string"
       if(err) {
-        return res.status(403).json({message:"auth failed"})
+        console.log(err);
+        return res.status(403).json({msg:"error in jwt verification"})
       }
       if(!payload){
-        return res.status(403).json({message:"auth failed"})
+        return res.status(403).json({msg:"payload absent"})
       }
       if(typeof payload === "string"){
-        return res.status(403).json({message: "auth failed"})
+        return res.status(403).json({msg: "payload is not a string"})
       }
       req.headers["userId"] = payload.userId;
       next()
     })
   }else{
-    return res.status(403).json({message:"auth failed"})
+    return res.status(403).json({msg:"auth failed"})
   }
 
   // try {
