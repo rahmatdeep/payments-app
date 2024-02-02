@@ -6,8 +6,6 @@ import JWT_SECRET from "../config";
 import { User, Account } from "../db";
 import authMiddleware from "../middleware";
 
-
-
 const router = express.Router();
 
 //SIGN UP
@@ -169,4 +167,32 @@ router.get("/bulk", authMiddleware, async (req, res) => {
   });
 });
 
+//FIND USER
+
+router.get("/user-info", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findOne({
+      _id: req.headers["userId"],
+    });
+    if (!user) {
+      return res.status(500).json({ msg: "Servor Error" });
+    }
+    const account = await Account.findOne({
+      userId: req.headers["userId"],
+    });
+    if (!account) {
+      return res.status(500).json({ msg: "Servor Error" });
+    }
+
+    return res.json({
+      user,
+      account,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      msg: "Servor Error",
+    });
+  }
+});
 export default router;
