@@ -86,26 +86,33 @@ router.post("/signin", async (req, res) => {
     });
   }
 
-  const user = await User.findOne({
-    username: req.body.username,
-    password: req.body.password,
-  });
-
-  if (user) {
-    const token = jwt.sign(
-      {
-        userId: user._id,
-      },
-      JWT_SECRET
-    );
-
-    res.json({
-      token: token,
+  try {
+    const user = await User.findOne({
+      username: req.body.username,
+      password: req.body.password,
     });
-    return;
-  } else {
-    res.status(411).json({
-      message: "Error while loggin in",
+
+    if (user) {
+      const token = jwt.sign(
+        {
+          userId: user._id,
+        },
+        JWT_SECRET
+      );
+
+      res.json({
+        token: token,
+      });
+      return;
+    } else {
+      res.status(404).json({
+        message: "User Not Found",
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      msg: "Servor Error",
     });
   }
 });
@@ -133,11 +140,18 @@ router.put("/", authMiddleware, async (req, res) => {
     });
   }
 
-  await User.updateOne({ _id: req.headers["userId"] }, { $set: req.body });
+  try {
+    await User.updateOne({ _id: req.headers["userId"] }, { $set: req.body });
 
-  res.json({
-    message: "Updated successfully",
-  });
+    res.json({
+      message: "Updated successfully",
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      msg: "Servor Error",
+    });
+  }
 });
 
 //SEARCH USERS
@@ -150,30 +164,34 @@ router.get("/bulk", authMiddleware, async (req, res) => {
   //     message: "Filter Empty",
   //   });
   // }
-
-  const users = await User.find({
-    $or: [
-      {
-        firstName: {
-          $regex: filter,
+  try {
+    const users = await User.find({
+      $or: [
+        {
+          firstName: {
+            $regex: filter,
+          },
         },
-      },
-      {
-        lastName: {
-          $regex: filter,
+        {
+          lastName: {
+            $regex: filter,
+          },
         },
-      },
-    ],
-  });
+      ],
+    });
 
-  res.json({
-    user: users.map((user) => ({
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      _id: user._id,
-    })),
-  });
+    res.json({
+      user: users.map((user) => ({
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        _id: user._id,
+      })),
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ msg: "Servor Error" });
+  }
 });
 
 //FIND USER
