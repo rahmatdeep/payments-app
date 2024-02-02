@@ -15,6 +15,7 @@ function App() {
           <Route path="/signin" element={<Signin />}></Route>
           <Route path="/dashboard" element={<Dashboard />}></Route>
           <Route path="/send" element={<SendMoney />}></Route>
+          <Route path="*" element={<h1>No Such Route Exsists</h1>}></Route>
         </Routes>
       </BrowserRouter>
     </div>
