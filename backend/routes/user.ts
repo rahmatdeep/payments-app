@@ -21,7 +21,7 @@ router.post("/signup", async (req, res) => {
   const { success } = signupSchema.safeParse(req.body);
   if (!success) {
     return res.status(411).json({
-      message: "Email already taken/ Incorrect inputs",
+      msg: "Email already taken/ Incorrect inputs",
     });
   }
 
@@ -31,7 +31,7 @@ router.post("/signup", async (req, res) => {
     });
     if (exsistingUser) {
       return res.status(411).json({
-        message: "Email already taken / Incorrect inputs",
+        msg: "Email already taken / Incorrect inputs",
       });
     }
   } catch (e) {
@@ -82,7 +82,7 @@ router.post("/signin", async (req, res) => {
   const { success } = singinSchema.safeParse(req.body);
   if (!success) {
     res.status(411).json({
-      message: "Incorrect inputs",
+      msg: "Incorrect inputs",
     });
   }
 
@@ -106,7 +106,7 @@ router.post("/signin", async (req, res) => {
       return;
     } else {
       res.status(404).json({
-        message: "User Not Found",
+        msg: "User Not Found",
       });
     }
   } catch (e) {
@@ -129,14 +129,14 @@ router.put("/", authMiddleware, async (req, res) => {
   const { success } = updateSchema.safeParse(req.body);
   if (!success) {
     res.status(411).json({
-      message: "Error while updating information",
+      msg: "Error while updating information",
     });
   }
 
   const updatedFields = Object.keys(req.body);
   if (updatedFields.length === 0) {
     return res.status(411).json({
-      message: "No fields provided for update",
+      msg: "No fields provided for update",
     });
   }
 
@@ -144,7 +144,7 @@ router.put("/", authMiddleware, async (req, res) => {
     await User.updateOne({ _id: req.headers["userId"] }, { $set: req.body });
 
     res.json({
-      message: "Updated successfully",
+      msg: "Updated successfully",
     });
   } catch (e) {
     console.log(e);
@@ -161,7 +161,7 @@ router.get("/bulk", authMiddleware, async (req, res) => {
 
   // if (filter === "") {
   //   return res.json({
-  //     message: "Filter Empty",
+  //     msg: "Filter Empty",
   //   });
   // }
   try {

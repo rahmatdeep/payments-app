@@ -11,7 +11,7 @@ router.get("/balance", authMiddleware, async (req, res) => {
       userId: req.headers["userId"],
     });
     if (!account) {
-      return res.status(404).json({ message: "Account not Found" });
+      return res.status(404).json({ msg: "Account not Found" });
     }
     res.json({
       balance: account.balance,
@@ -39,7 +39,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
       if (session) {
         await session.abortTransaction();
         return res.status(400).json({
-          message: "Insuffecient balance",
+          msg: "Insuffecient balance",
         });
       }
     }
@@ -50,7 +50,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
       if (session) {
         await session.abortTransaction();
         return res.status(400).json({
-          message: "Invalid account",
+          msg: "Invalid account",
         });
       }
     }
@@ -66,7 +66,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 
     await session.commitTransaction();
     res.json({
-      message: "Transaction successful",
+      msg: "Transaction successful",
     });
   } catch (e) {
     console.log(e);

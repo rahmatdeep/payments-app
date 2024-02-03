@@ -37,15 +37,19 @@ export function Signin() {
           <div className="pt-4">
             <Button
               onClick={async () => {
-                const response = await axios.post(
-                  "http://localhost:3000/api/v1/user/signin",
-                  {
-                    username,
-                    password,
-                  }
-                );
-                localStorage.setItem("token", response.data.token);
-                navigate("/dashboard");
+                try {
+                  const response = await axios.post(
+                    "http://localhost:3000/api/v1/user/signin",
+                    {
+                      username,
+                      password,
+                    }
+                  );
+                  localStorage.setItem("token", response.data.token);
+                  navigate("/dashboard");
+                } catch (e) {
+                  alert(e.response.data.msg);
+                }
               }}
               label={"Sign in"}
             />
