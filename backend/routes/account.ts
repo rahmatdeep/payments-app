@@ -25,6 +25,11 @@ router.get("/balance", authMiddleware, async (req, res) => {
 });
 
 router.post("/transfer", authMiddleware, async (req, res) => {
+  if (req.headers["userId"] === req.body.to) {
+    return res.status(411).json({
+      msg: "You cannot send money to yourself",
+    });
+  }
   try {
     const session = await mongoose.startSession();
 

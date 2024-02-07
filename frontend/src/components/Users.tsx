@@ -3,7 +3,7 @@ import { Button } from "../components/Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export const Users = () => {
+export const Users = ({ name }) => {
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("");
 
@@ -11,8 +11,8 @@ export const Users = () => {
     axios
       .get("http://localhost:3000/api/v1/user/bulk?filter=" + filter, {
         headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
-        }
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
       })
       .then((response) => {
         setUsers(response.data.user);
@@ -34,14 +34,14 @@ export const Users = () => {
       </div>
       <div>
         {users.map((user) => (
-          <User user={user} />
+          <User user={user} name={name} />
         ))}
       </div>
     </>
   );
 };
 
-function User({ user }) {
+function User({ user, name }) {
   const navigate = useNavigate();
   return (
     <div className="flex justify-between">
@@ -62,7 +62,11 @@ function User({ user }) {
       <div className="flex flex-col justify-center h-ful">
         <Button
           onClick={(e) => {
-            navigate(`/send?id=` + user._id + "&firstName=" + user.firstName);
+            if (name === user.firstName) {
+              alert("Cannot Send money to yourself");
+            } else {
+              navigate(`/send?id=` + user._id + "&firstName=" + user.firstName);
+            }
           }}
           label={"Send Money"}
         />

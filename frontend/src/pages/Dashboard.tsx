@@ -27,7 +27,7 @@ export function Dashboard() {
       <Appbar name={name}/>
       <div className="m-8">
         <Balance value={balance} />
-        <Users/>
+        <Users name={name}/>
       </div>
     </div>
   );
