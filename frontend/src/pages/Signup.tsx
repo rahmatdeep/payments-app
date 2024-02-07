@@ -64,6 +64,7 @@ export function Signup() {
                       password,
                     }
                   );
+                  alert(response.data.msg);
                   localStorage.setItem("token", response.data.token);
                   navigate("/dashboard");
                 } catch (e) {
