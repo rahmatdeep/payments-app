@@ -16,7 +16,7 @@ export function Signin() {
         <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4">
           <Heading label={"Sign in"} />
           <SubHeading
-            label={"Enter your credentialsa to access your account"}
+            label={"Enter your credentials to access your account"}
           />
           <InputBox
             type={"text"}

@@ -1,9 +1,19 @@
 import jwt, { decode } from "jsonwebtoken";
-
-import JWT_SECRET from "./config";
+import dotenv from "dotenv";
+dotenv.config();
+// import JWT_SECRET from "./config";
 import { Request, Response, NextFunction } from "express";
 
+const JWT_SECRET = process.env.JWT_SECRET;
+
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  if (!JWT_SECRET) {
+    console.log("JWT key absent");
+
+    return res.status(500).json({
+      msg: "Servor Error",
+    });
+  }
   try {
     const authHeader = req.headers.authorization;
 

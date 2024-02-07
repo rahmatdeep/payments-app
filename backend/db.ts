@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
-
-const dbURL = "mongodb+srv://admin:root@cluster0.m63nmlj.mongodb.net/paytm";
-
+import dotenv from "dotenv"
+dotenv.config()
+const dbURL = process.env.DB_URL;
+if(!dbURL){
+  throw new Error("DB url missing")
+}
 mongoose.connect(dbURL);
 
 const UserSchema = new mongoose.Schema({

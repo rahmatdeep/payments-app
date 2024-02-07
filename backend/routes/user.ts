@@ -1,11 +1,13 @@
 import express from "express";
 import zod from "zod";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
-import JWT_SECRET from "../config";
 import { User, Account } from "../db";
 import authMiddleware from "../middleware";
 
+const JWT_SECRET = process.env.JWT_SECRET;
 const router = express.Router();
 
 //SIGN UP
@@ -22,6 +24,13 @@ router.post("/signup", async (req, res) => {
   if (!success) {
     return res.status(411).json({
       msg: "Email already taken/ Incorrect inputs",
+    });
+  }
+  if (!JWT_SECRET) {
+    console.log("JWT key missing");
+
+    return res.status(500).json({
+      msg: "Servor Error",
     });
   }
 
@@ -84,6 +93,10 @@ router.post("/signin", async (req, res) => {
     res.status(411).json({
       msg: "Incorrect inputs",
     });
+  }
+  if (!JWT_SECRET) {
+    console.log("JWT key missing");
+    return res.status(500).json({ msg: "Servor Error" });
   }
 
   try {

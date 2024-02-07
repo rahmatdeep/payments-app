@@ -1,6 +1,10 @@
 import express from "express";
 import cors from "cors";
 import mainRouter from "./routes/index";
+import dotenv from "dotenv";
+dotenv.config();
+
+const port = process.env.PORT || 3000;
 
 const app = express();
 
@@ -9,6 +13,6 @@ app.use(express.json());
 
 app.use("/api/v1", mainRouter);
 
-app.listen(3000, () => {
-  console.log(`listening on Port 3000`);
+app.listen(port, () => {
+  console.log(`listening on Port ${port}`);
 });
