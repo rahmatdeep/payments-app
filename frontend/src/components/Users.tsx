@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 export const Users = ({ name }) => {
   const [users, setUsers] = useState([]);
@@ -34,7 +35,7 @@ export const Users = ({ name }) => {
       </div>
       <div>
         {users.map((user) => (
-          <User user={user} name={name} />
+          <User key={uuidv4()} user={user} name={name} />
         ))}
       </div>
     </>
